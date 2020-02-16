@@ -76,6 +76,8 @@ class WeatherWindow(Gtk.Window):
             t.set_text(weather[i]["name"])
             p.set_text("{}°".format(weather[i]["temperature"]))
 
+        return True
+
          
 
 def main(args):
@@ -87,6 +89,11 @@ def main(args):
     window.connect("destroy", Gtk.main_quit)
     window.show_all()
 
+
+    if not args.geometry is None:
+        if not window.parse_geometry(args.geometry):
+            print('geometry "{}" not parsed.')
+
     try:
         Gtk.main()
     except KeyboardInterrupt:
@@ -97,7 +104,7 @@ def main(args):
 def get_styles():
     css = b"""
     label { 
-        font-size: 45px;
+        font-size: 20px;
         font-family: Carlito; 
         color: white;
         text-shadow: grey;
@@ -132,6 +139,7 @@ if __name__ == "__main__":
     parser.add_argument("--lat", help="lattitude", default=44.9270833)
     parser.add_argument("--long", help="longitude", default=-93.2081002)
     parser.add_argument("--items", type=int, help="number of forcast items to display", default=5)
+    parser.add_argument("--geometry", help="window geometry")
 
     args = parser.parse_args()
     main(args)
