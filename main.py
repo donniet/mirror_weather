@@ -104,7 +104,7 @@ def main(args):
 def get_styles():
     css = b"""
     label { 
-        font-size: 20px;
+        font-size: 25px;
         font-family: Carlito; 
         color: white;
         text-shadow: grey;
