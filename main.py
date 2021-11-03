@@ -6,11 +6,24 @@ import requests
 
 def get_weather(args):
     url = args.weather_url.format(args.lat, args.long)
+    print('url: {}'.format(url))
     headers = {
         "User-Agent": "python/3.2 (Linux x86_64) requests/{} {}".format(requests.__version__, args.email),
         "Content-Type": "application/geo+json",
     }
     response = requests.get(url, headers=headers)
+
+    print('response: {}'.format(response.json()))
+    if response.status_code !=  200:
+        print('error getting weather!')
+        return response.status_code
+
+    # get the forecast URL from here:
+
+    url = response.json()["properties"]["forecast"]
+    response = requests.get(url, headers=headers)
+
+    print('response: {}'.format(response.json()))
 
     if response.status_code == 200:
         return response.json()["properties"]["periods"]
@@ -134,7 +147,7 @@ def get_styles():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--weather_url", help="url format to weather endpoint", default="https://api.weather.gov/points/{},{}/forecast")
+    parser.add_argument("--weather_url", help="url format to weather endpoint", default="https://api.weather.gov/points/{},{}")
     parser.add_argument("--email", help="email of user to send in user agent", default="me@me.com")
     parser.add_argument("--lat", help="lattitude", default=44.9270833)
     parser.add_argument("--long", help="longitude", default=-93.2081002)
